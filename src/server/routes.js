@@ -71,6 +71,11 @@ function initRevisionRoutes(app) {
 	app.use('/revision', router);
 }
 
+function initAchievementRoutes(app) {
+	const router = require('./routes/achievement');
+	app.use('/achievement', router);
+}
+
 module.exports = function initRoutes(app) {
 	initRootRoutes(app);
 
@@ -80,6 +85,7 @@ module.exports = function initRoutes(app) {
 	initWorkRoutes(app);
 	initPublisherRoutes(app);
 	initRevisionRoutes(app);
+	initAchievementRoutes(app);
 
 	app.use('/editor', require('./routes/editor'));
 };
