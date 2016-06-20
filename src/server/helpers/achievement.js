@@ -104,18 +104,16 @@ function testTiers(signal, editorId, tiers) {
 }
 
 function getTypeRevisions(type, editor) {
-	// TODO make this work with bookshelf or move elsewhere
 	const snakeType = _.snakeCase(type);
-	const rawsql = 'SELECT foo.id, bookbrainz.' + snakeType + '.id ' +
-				'FROM' +
-				'(SELECT * FROM bookbrainz.revision ' +
-				'WHERE author_id=' + editor + ') AS foo ' +
-				'INNER JOIN ' +
-				'bookbrainz.' + snakeType + ' on ' +
-				'foo.id = bookbrainz.' + snakeType + '.id';
+	const rawsql = `SELECT revisions.id, bookbrainz.${snakeType}.id \
+				FROM \
+				(SELECT * FROM bookbrainz.revision \
+				WHERE author_id=${editor}) AS revisions \
+				INNER JOIN \
+				bookbrainz.$(snakeType) on \
+				revisions.id = bookbrainz.$(snakeType).id`;
 	return Bookshelf.knex.raw(rawsql)
 		.then((out) => out.rowCount);
-
 }
 
 function processRevisionist(editorId) {
@@ -136,7 +134,6 @@ function processRevisionist(editorId) {
 function processCreatorCreator(editorId) {
 	getTypeRevisions('creatorRevision', editorId)
 		.then((rowCount) => {
-			let creatorPromise;
 			const tiers = [
 				{threshold: 100, name: 'Creator Creator III',
 					titleName: 'Creator Creator'},
@@ -175,8 +172,8 @@ function processPublisher(editorId) {
 
 function processSprinter(editorId) {
 	const rawSql =
-		'SELECT * from bookbrainz.revision WHERE author_id=' + editorId +
-		'and created_at > (SELECT CURRENT_DATE - INTERVAL \'1 hour\');';
+		`SELECT * from bookbrainz.revision WHERE author_id=${editorId} \
+		and created_at > (SELECT CURRENT_DATE - INTERVAL \'1 hour\');`;
 
 	return Bookshelf.knex.raw(rawSql)
 		.then((out) => {
@@ -184,7 +181,7 @@ function processSprinter(editorId) {
 				{threshold: 10, name: 'Sprinter', titleName: 'Sprinter'}
 			];
 			return testTiers(out.rowCount, editorId, tiers);
-		})
+		});
 }
 
 
