@@ -76,7 +76,7 @@ function testTiers(signal, editorId, tiers) {
 	let achievementPromise;
 	let achievementAwarded = false;
 	for (let i = 0; i < tiers.length; i++) {
-		if (signal > tiers[i].threshold) {
+		if (signal >= tiers[i].threshold) {
 			achievementAwarded = true;
 			if (tiers[i].titleName) {
 				promiseList.push(
