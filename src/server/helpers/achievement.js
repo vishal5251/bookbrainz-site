@@ -110,8 +110,8 @@ function getTypeRevisions(type, editor) {
 				(SELECT * FROM bookbrainz.revision \
 				WHERE author_id=${editor}) AS revisions \
 				INNER JOIN \
-				bookbrainz.$(snakeType) on \
-				revisions.id = bookbrainz.$(snakeType).id`;
+				bookbrainz.${snakeType} on \
+				revisions.id = bookbrainz.${snakeType}.id`;
 	return Bookshelf.knex.raw(rawsql)
 		.then((out) => out.rowCount);
 }
@@ -185,6 +185,22 @@ function processSprinter(editorId) {
 }
 
 
+function processFunRunner(editorId) {
+	const rawSql =
+		`SELECT DISTINCT created_at::date from bookbrainz.revision WHERE author_id=${editorId} \
+		and created_at > (SELECT CURRENT_DATE - INTERVAL \'6 days\');`;
+
+	return Bookshelf.knex.raw(rawSql)
+		.then((out) => {
+			console.log(out);
+			const tiers = [
+				{threshold: 7, name: 'Fun Runner', titleName: 'Fun Runner'}
+			];
+			return testTiers(out.rowCount, editorId, tiers);
+		});
+}
+
+
 achievement.processPageVisit = () => {
 
 };
@@ -195,7 +211,8 @@ achievement.processEdit = (userid) =>
 		processCreatorCreator(userid),
 		processLimitedEdition(userid),
 		processPublisher(userid),
-		processSprinter(userid)
+		processSprinter(userid),
+		processFunRunner(userid)
 	);
 
 
