@@ -44,11 +44,13 @@ function awardAchievement(editorId, achievementId) {
 				.save(null, {method: 'insert'});
 		}
 		else {
-			awardPromise = Promise.resolve();
+			awardPromise = Promise.resolve(unlock);
 		}
 		return awardPromise;
 	});
 }
+
+achievement.awardAchievement = awardAchievement;
 
 function awardTitle(editorId, titleId) {
 	const titleAttribs = {
@@ -64,11 +66,13 @@ function awardTitle(editorId, titleId) {
 					.save(null, {method: 'insert'});
 			}
 			else {
-				awardPromise = Promise.resolve();
+				awardPromise = Promise.resolve(unlock);
 			}
 			return awardPromise;
 		});
 }
+
+achievement.awardTitle = awardTitle;
 
 // tiers = [{threshold, name, (titleName)}] (optional)
 function testTiers(signal, editorId, tiers) {
