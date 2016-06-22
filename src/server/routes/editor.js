@@ -109,8 +109,18 @@ router.post('/edit/handler', auth.isAuthenticatedForHandler, (req, res) => {
 			// Modify the user to match the updates from the form
 			console.log(req.body);
 			return editor.set('bio', req.body.bio)
-				.set('titleUnlockId', req.body.title)
 				.save();
+		})
+		.then((editor) => {
+			console.log(req.body.title === 'NULL');
+			if (req.body.title === 'NULL' || req.body.title === '') {
+				return editor.set('titleUnlockId', null)
+					.save();
+			}
+			else {
+				return editor.set('titleUnlockId', req.body.title)
+					.save();
+			}
 		})
 		.then((editor) => editor.toJSON());
 

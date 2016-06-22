@@ -67,6 +67,7 @@ module.exports = React.createClass({
 			title.unlockId = unlock.id;
 			return title;
 		});
+		titles.unshift({id: 0, unlockId: "NULL", title: "No Title"});
 		return (
 			<form
 				className="form-horizontal"
