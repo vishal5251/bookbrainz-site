@@ -76,35 +76,35 @@ achievement.awardTitle = awardTitle;
 
 // tiers = [{threshold, name, (titleName)}] (optional)
 function testTiers(signal, editorId, tiers) {
-	const promiseList = [];
-	let achievementPromise;
-	let achievementAwarded = false;
-	for (let i = 0; i < tiers.length; i++) {
-		if (signal >= tiers[i].threshold) {
-			achievementAwarded = true;
-			if (tiers[i].titleName) {
-				promiseList.push(
-					new TitleType({title: tiers[i].titleName})
+	const promiseList = _.compact(tiers.map((tier) => {
+		let achievementTierPromise;
+		if (signal > tier.threshold) {
+			promises = [];
+			promises.push(
+				new AchievementType({
+					name: tier.name
+				})
+					.fetch({require: true})
+					.then((achievement) =>
+						awardAchievement(editorId, achievement.id))
+			)
+			if (tier.titleName) {
+				promises.push(
+					new TitleType({title: tier.titleName})
 						.fetch({require: true})
 						.then((title) =>
 							awardTitle(editorId, title.id))
 				);
 			}
-			promiseList.push(
-				new AchievementType({name: tiers[i].name})
-					.fetch({require: true})
-					.then((achievementTier) =>
-						awardAchievement(editorId, achievementTier.id))
-			);
+			achievementTierPromise = Promise.all(promises);
 		}
-	}
-	if (achievementAwarded) {
-		achievementPromise = Promise.all(promiseList);
-	}
-	else {
-		achievementPromise = Promise.resolve();
-	}
-	return achievementPromise;
+		else {
+			achievementTierPromise = null
+		}
+		return achievementTierPromise;
+	}));
+
+	return Promise.all(promiseList);
 }
 
 function getTypeRevisions(type, editor) {
