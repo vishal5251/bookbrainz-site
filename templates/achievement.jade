@@ -1,6 +1,9 @@
-extends layout
+extends /layout
 
 block body
-	.row
-		.col-md-12
-			div!= markup
+	.container#content
+		#awardForm
+
+block js
+	script(type='application/json')#props!= JSON.stringify(props)
+	script(src='/js/achievement.js')
