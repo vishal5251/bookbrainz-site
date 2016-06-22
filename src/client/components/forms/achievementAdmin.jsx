@@ -1,6 +1,7 @@
 const React = require('react');
 const Input = require('react-bootstrap').Input;
 const Button = require('react-bootstrap').Button;
+const Select = require('../input/select2.jsx');
 const request = require('superagent-bluebird-promise');
 
 module.exports = React.createClass({
@@ -9,10 +10,11 @@ module.exports = React.createClass({
 		'use strict';
 		event.preventDefault();
 		const data = {
-			editor: this.editor,
-			achievement: this.achievement,
-			title: this.title
+			editor: this.editor.getValue(),
+			achievement: this.achievement.getValue(),
+			title: this.title.getValue()
 		};
+		console.log(data);
 		this.setState({waiting: true});
 
 		request.post('/achievement/admin/handler')
@@ -29,11 +31,15 @@ module.exports = React.createClass({
 				className="form-horizontal"
 				onSubmit={this.handleSubmit}
 			>
-				<Input
+				<Select
+					noDefault
+					idAttribute="id"
 					label="Editor"
+					labelAttribute="name"
 					labelClassName="col-md-3"
+					options={this.props.editor}
+					palaceholder="Select Editor"
 					ref={(ref) => this.editor = ref}
-					type="textarea"
 					wrapperClassName="col-md-9"
 				/>
 				<Input
