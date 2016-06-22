@@ -315,7 +315,6 @@ router.get('/:id/achievements', (req, res, next) => {
 
 function rankUpdate(editorId, bodyRank, rank) {
 	let promise;
-	if (bodyRank !== 'none') {
 		promise = new AchievementUnlock({
 			profileRank: rank
 		})
@@ -326,21 +325,19 @@ function rankUpdate(editorId, bodyRank, rank) {
 						.save();
 				}
 			})
-			.then(() =>
-				new AchievementUnlock({
-					achievement_id: parseInt(bodyRank, 10),
-					editor_id: parseInt(editorId, 10)
-				})
-					.fetch({require: true})
-					.then((unlock) =>
-						unlock.set('profileRank', rank)
-							.save()
-					)
-			);
-	}
-	else {
-		promise = Promise.resolve(false);
-	}
+			.then(() => {
+				if (bodyRank != "none") {
+					return new AchievementUnlock({
+						achievement_id: parseInt(bodyRank, 10),
+						editor_id: parseInt(editorId, 10)
+					})
+						.fetch({require: true})
+						.then((unlock) =>
+							unlock.set('profileRank', rank)
+								.save()
+						)
+				}
+			});
 	return promise;
 }
 
