@@ -20,7 +20,7 @@ module.exports = React.createClass({
 		request.post('/achievement/admin/handler')
 			.send(data).promise()
 			.then(() => {
-				window.location.href = '/blah';
+				window.location.href = '/achievement/admin';
 			});
 	},
 	render() {
