@@ -42,18 +42,24 @@ module.exports = React.createClass({
 					ref={(ref) => this.editor = ref}
 					wrapperClassName="col-md-9"
 				/>
-				<Input
+				<Select
+					noDefault
+					idAttribute="id"
 					label="Achievement"
+					labelAttribute="name"
 					labelClassName="col-md-3"
+					options={this.props.achievement}
 					ref={(ref) => this.achievement = ref}
-					type="textarea"
 					wrapperClassName="col-md-9"
 				/>
-				<Input
+				<Select
+					noDefault
+					idAttribute="id"
 					label="Title"
+					labelAttribute="title"
 					labelClassName="col-md-3"
+					options={this.props.title}
 					ref={(ref) => this.title = ref}
-					type="textarea"
 					wrapperClassName="col-md-9"
 				/>
 				<div className="form-group">
