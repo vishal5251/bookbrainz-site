@@ -22,7 +22,7 @@ const request = require('superagent-bluebird-promise');
 
 const Button = require('react-bootstrap').Button;
 const Input = require('react-bootstrap').Input;
-
+const Select = require('../input/select2.jsx');
 const LoadingSpinner = require('../loading_spinner.jsx');
 
 module.exports = React.createClass({
@@ -47,8 +47,9 @@ module.exports = React.createClass({
 		const data = {
 			id: this.props.editor.id,
 			bio: this.bio.getValue().trim(),
-			title: this.title.value
+			title: this.title.getValue()
 		};
+		console.log(data);
 		this.setState({waiting: true});
 
 		request.post('/editor/edit/handler')
@@ -62,9 +63,10 @@ module.exports = React.createClass({
 		'use strict';
 		const loadingElement = this.state.waiting ? <LoadingSpinner/> : null;
 		const titles = this.props.titles.map(function(unlock) {
-			return (<option value={unlock.id}>{unlock.title.title}</option>)
+			const title = unlock.title;
+			title.unlockId = unlock.id;
+			return title;
 		});
-
 		return (
 			<form
 				className="form-horizontal"
@@ -78,19 +80,19 @@ module.exports = React.createClass({
 					ref={(ref) => this.bio = ref}
 					type="textarea"
 					wrapperClassName="col-md-9"
+					/>
+				<Select
+					noDefault
+					defaultValue={this.title}
+					idAttribute="unlockId"
+					label="Title"
+					labelAttribute="title"
+					labelClassName="col-md-4"
+					options={titles}
+					placeholder="Select title"
+					ref={(ref) => this.title = ref}
+					wrapperClassName="col-md-4"
 				/>
-				<div className="form-group">
-					<div className="col-md-4 col-md-offset-4">
-						<label>Title</label>
-						<select name="title"
-								className="form-control"
-								ref={(ref) => this.title = ref}
-								value={this.title}>
-							<option value="none"></option>
-							{titles}
-						</select>
-					</div>
-				</div>
 				<div className="form-group">
 					<div className="col-md-4 col-md-offset-4">
 						<Button
