@@ -23,6 +23,9 @@ const AchievementUnlock = require('bookbrainz-data').AchievementUnlock;
 const Editor = require('bookbrainz-data').Editor;
 const TitleType = require('bookbrainz-data').TitleType;
 const TitleUnlock = require('bookbrainz-data').TitleUnlock;
+const CreatorRevision = require('bookbrainz-data').CreatorRevision;
+const EditionRevision = require('bookbrainz-data').EditionRevision;
+const PublicationRevision = require('bookbrainz-data').PublicationRevision;
 
 const Promise = require('bluebird');
 const achievement = {};
@@ -79,7 +82,7 @@ function testTiers(signal, editorId, tiers) {
 	const promiseList = _.compact(tiers.map((tier) => {
 		let achievementTierPromise;
 		if (signal > tier.threshold) {
-			promises = [];
+			const promises = [];
 			promises.push(
 				new AchievementType({
 					name: tier.name
@@ -107,17 +110,22 @@ function testTiers(signal, editorId, tiers) {
 	return Promise.all(promiseList);
 }
 
-function getTypeRevisions(type, editor) {
-	const snakeType = _.snakeCase(type);
-	const rawsql = `SELECT revisions.id, bookbrainz.${snakeType}.id \
-				FROM \
-				(SELECT * FROM bookbrainz.revision \
-				WHERE author_id=${editor}) AS revisions \
-				INNER JOIN \
-				bookbrainz.${snakeType} on \
-				revisions.id = bookbrainz.${snakeType}.id`;
-	return Bookshelf.knex.raw(rawsql)
-		.then((out) => out.rowCount);
+function getTypeRevisions(revisionType, revisionString, editor) {
+	return revisionType
+		.query(function(qb) {
+			qb.innerJoin('bookbrainz.revision',
+				'bookbrainz.revision.id',
+				`bookbrainz.${revisionString}.id`);
+			qb.groupBy(`${revisionString}.id`,
+				`${revisionString}.bbid`,
+				'revision.id');
+			qb.where('bookbrainz.revision.author_id', '=', editor);
+		})
+		.fetchAll()
+		.then((out) => {
+			console.log(out.length);
+			return out.length;
+		})
 }
 
 function processRevisionist(editorId) {
@@ -136,7 +144,7 @@ function processRevisionist(editorId) {
 }
 
 function processCreatorCreator(editorId) {
-	getTypeRevisions('creatorRevision', editorId)
+	return getTypeRevisions(new CreatorRevision(), 'creator_revision', editorId)
 		.then((rowCount) => {
 			const tiers = [
 				{threshold: 100, name: 'Creator Creator III',
@@ -149,7 +157,7 @@ function processCreatorCreator(editorId) {
 }
 
 function processLimitedEdition(editorId) {
-	getTypeRevisions('editionRevision', editorId)
+	return getTypeRevisions(new EditionRevision(), 'edition_revision', editorId)
 		.then((rowCount) => {
 			const tiers = [
 				{threshold: 100, name: 'Limited Edition III',
@@ -162,7 +170,9 @@ function processLimitedEdition(editorId) {
 }
 
 function processPublisher(editorId) {
-	getTypeRevisions('publisherRevision', editorId)
+	return getTypeRevisions(new PublicationRevision(),
+		'publication_revision',
+		editorId)
 		.then((rowCount) => {
 			const tiers = [
 				{threshold: 100, name: 'Publisher III',
