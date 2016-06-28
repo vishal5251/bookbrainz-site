@@ -26,6 +26,8 @@ const TitleUnlock = require('bookbrainz-data').TitleUnlock;
 const CreatorRevision = require('bookbrainz-data').CreatorRevision;
 const EditionRevision = require('bookbrainz-data').EditionRevision;
 const PublicationRevision = require('bookbrainz-data').PublicationRevision;
+const PublisherRevision = require('bookbrainz-data').PublisherRevision;
+const WorkRevision = require('bookbrainz-data').WorkRevision;
 
 const Promise = require('bluebird');
 const achievement = {};
@@ -215,6 +217,7 @@ function processPublisherCreator(editorId) {
 				{threshold: 10, name: 'Publisher Creator II'},
 				{threshold: 1, name: 'Publisher Creator I'}
 			];
+			return testTiers(rowCount, editorId, tiers);
 		});
 }
 
@@ -229,6 +232,7 @@ function processWorkerBee(editorId) {
 				{threshold: 10, name: 'Worker Bee II'},
 				{threshold: 1, name: 'Worker Bee I'}
 			];
+			return testTiers(rowCount, editorId, tiers);
 		});
 }
 
@@ -288,6 +292,8 @@ achievement.processEdit = (userid) =>
 		processCreatorCreator(userid),
 		processLimitedEdition(userid),
 		processPublisher(userid),
+		processPublisherCreator(userid),
+		processWorkerBee(userid),
 		processSprinter(userid),
 		processFunRunner(userid),
 		processMarathoner(userid)
