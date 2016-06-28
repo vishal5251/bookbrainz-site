@@ -164,10 +164,10 @@ function processRevisionist(editorId) {
 }
 
 function processCreatorCreator(editorId) {
-	return getTypeRevisions(new CreatorRevision(), 'creator_revision', editorId)
+	return getTypeCreation(new CreatorRevision(), 'creator_revision', editorId)
 		.then((rowCount) => {
 			const tiers = [
-				{threshold: 100, name: 'Creator Creator III',
+				{threshold: 25, name: 'Creator Creator III',
 					titleName: 'Creator Creator'},
 				{threshold: 10, name: 'Creator Creator II'},
 				{threshold: 1, name: 'Creator Creator I'}
@@ -177,10 +177,10 @@ function processCreatorCreator(editorId) {
 }
 
 function processLimitedEdition(editorId) {
-	return getTypeRevisions(new EditionRevision(), 'edition_revision', editorId)
+	return getTypeCreation(new EditionRevision(), 'edition_revision', editorId)
 		.then((rowCount) => {
 			const tiers = [
-				{threshold: 100, name: 'Limited Edition III',
+				{threshold: 25, name: 'Limited Edition III',
 					titleName: 'Limited Edition'},
 				{threshold: 10, name: 'Limited Edition II'},
 				{threshold: 1, name: 'Limited Edition I'}
@@ -190,12 +190,12 @@ function processLimitedEdition(editorId) {
 }
 
 function processPublisher(editorId) {
-	return getTypeRevisions(new PublicationRevision(),
+	return getTypeCreation(new PublicationRevision(),
 		'publication_revision',
 		editorId)
 		.then((rowCount) => {
 			const tiers = [
-				{threshold: 100, name: 'Publisher III',
+				{threshold: 25, name: 'Publisher III',
 					titleName: 'Publisher'},
 				{threshold: 10, name: 'Publisher II'},
 				{threshold: 1, name: 'Publisher I'}
