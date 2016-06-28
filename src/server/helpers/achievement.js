@@ -287,7 +287,7 @@ achievement.processPageVisit = () => {
 };
 
 achievement.processEdit = (userid) =>
-	Promise.join(
+	Promise.all(
 		processRevisionist(userid),
 		processCreatorCreator(userid),
 		processLimitedEdition(userid),
