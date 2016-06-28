@@ -123,9 +123,29 @@ function getTypeRevisions(revisionType, revisionString, editor) {
 		})
 		.fetchAll()
 		.then((out) => {
-			console.log(out.length);
 			return out.length;
 		})
+}
+
+function getTypeCreation(revisionType, revisionString, editor) {
+	return revisionType
+		.query(function(qb) {
+			qb.innerJoin('bookbrainz.revision',
+				'bookbrainz.revision.id',
+				`bookbrainz.${revisionString}.id`);
+			qb.groupBy(`${revisionString}.id`,
+				`${revisionString}.bbid`,
+				'revision.id');
+			qb.where('bookbrainz.revision.author_id', '=', editor)
+			qb.leftOuterJoin('bookbrainz.revision_parent',
+				'bookbrainz.revision_parent.child_id',
+				`bookbrainz.${revisionString}.id`)
+			qb.whereNull('bookbrainz.revision_parent.parent_id');
+		})
+		.fetchAll()
+		.then((out) => {
+			return out.length;
+		});
 }
 
 function processRevisionist(editorId) {
