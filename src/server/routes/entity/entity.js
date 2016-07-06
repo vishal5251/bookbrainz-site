@@ -61,6 +61,9 @@ module.exports.displayEntity = (req, res) => {
 			bbid: res.locals.entity.bbid
 		})
 		.save(null, {method: 'insert'})
+		.then(() => {
+			achievement.processPageVisit(res.locals.user.id);
+		})
 		.catch(() => {
 			// ignore duplicate visits
 		});
