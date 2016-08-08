@@ -492,7 +492,7 @@ function processExplorer(editorId) {
 }
 
 achievement.processPageVisit = (userId) => {
-	Promise.all(
+	return Promise.all(
 		processExplorer(userId)
 	);
 };
