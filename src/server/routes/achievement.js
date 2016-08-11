@@ -37,19 +37,14 @@ router.get('/admin', (req, res) => {
 		.orderBy('name')
 		.fetchAll()
 		.then((achievements) => {
-			const achievementList = achievements.toJSON();
-			achievementList.unshift({id: 'none', name: 'No Achievement'});
-			console.log(achievementList);
-			return achievementList;
+			return achievements.toJSON();
 		});
 
 	const TitleJSONPromise = new TitleType()
 		.orderBy('title')
 		.fetchAll()
 		.then((titles) => {
-			const titleList = titles.toJSON();
-			titleList.unshift({id: 'none', title: 'No Title'});
-			return titleList;
+			return titles.toJSON();
 		});
 
 	Promise.join(EditorJSONPromise,
@@ -77,13 +72,11 @@ router.post('/admin/handler', (req, res) => {
 	let title;
 	if (req.body.editor !== 'none') {
 		const editorId = parseInt(req.body.editor, 10);
-		if (req.body.achievement !== 'none') {
-			const achievementId = parseInt(req.body.achievement, 10);
-			achievement = Achievement.awardAchievement(editorId, achievementId)
+		if (req.body.achievement) {
+			Achievement.awardAchievement(editorId, req.body.achievement)
 				.then((unlock) => {
-					let unlockJSON;
 					if (unlock !== null) {
-						unlockJSON = unlock.toJSON();
+						unlockJSON = unlock;
 					}
 					else {
 						unlockJSON = {};
@@ -91,19 +84,21 @@ router.post('/admin/handler', (req, res) => {
 					return unlockJSON;
 				});
 		}
-		if (req.body.title !== 'none') {
-			const titleId = parseInt(req.body.title, 10);
-			title = Achievement.awardTitle(editorId, titleId)
+		if (req.body.title) {
+			Achievement.awardTitle(
+				editorId,
+				{titleName: req.body.title}
+			)
 				.then((unlock) => {
 					let unlockJSON;
 					if (unlock !== null) {
-						unlockJSON = unlock.toJSON();
+						unlockJSON = unlock;
 					}
 					else {
 						unlockJSON = {};
 					}
 					return unlockJSON;
-				});
+				})
 		}
 	}
 	const unlocks = Promise.join(

@@ -10,11 +10,17 @@ module.exports = React.createClass({
 		'use strict';
 		event.preventDefault();
 		const data = {
-			editor: this.editor.getValue(),
-			achievement: this.achievement.getValue(),
-			title: this.title.getValue()
+			editor: this.editor.getValue()
 		};
-		console.log(data);
+
+		const achievement = this.achievement.getValue();
+		if (achievement !== '') {
+			data.achievement = achievement;
+		}
+		const title = this.title.getValue();
+		if (title !== '') {
+			data.title = title;
+		}
 		this.setState({waiting: true});
 
 		request.post('/achievement/admin/handler')
@@ -43,22 +49,22 @@ module.exports = React.createClass({
 					wrapperClassName="col-md-9"
 				/>
 				<Select
-					noDefault
-					idAttribute="id"
+					idAttribute="name"
 					label="Achievement"
 					labelAttribute="name"
 					labelClassName="col-md-3"
 					options={this.props.achievement}
+					placeholder="No Achievement"
 					ref={(ref) => this.achievement = ref}
 					wrapperClassName="col-md-9"
 				/>
 				<Select
-					noDefault
-					idAttribute="id"
+					idAttribute="title"
 					label="Title"
 					labelAttribute="title"
 					labelClassName="col-md-3"
 					options={this.props.title}
+					placeholder="No Title"
 					ref={(ref) => this.title = ref}
 					wrapperClassName="col-md-9"
 				/>
