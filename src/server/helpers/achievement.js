@@ -95,6 +95,8 @@ function awardAchievement(editorId, achievementName) {
 		);
 }
 
+achievement.awardAchievement = awardAchievement;
+
 /**
  * Awards a Title
  * @param {int} editorId - The editor the title will be assigned to
@@ -134,6 +136,8 @@ function awardTitle(editorId, tier) {
 	}
 	return titlePromise;
 }
+
+achievement.awardTitle = awardTitle;
 
 /**
  * In testTiers a tier is mapped to a list of achievements/titles this
