@@ -469,7 +469,7 @@ export function searchByName(orm, name, type, size, from) {
 					fields: [
 						'aliasSet.aliases.name^3',
 						'aliasSet.aliases.name.search',
-						'disambiguation.comment'
+						'disambiguation.comment^2'
 					],
 					minimum_should_match: '80%',
 					query: name,
