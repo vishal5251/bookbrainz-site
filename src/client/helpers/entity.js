@@ -19,7 +19,13 @@
 
 // @flow
 
-import {get as _get, isNil as _isNil, kebabCase as _kebabCase, upperFirst} from 'lodash';
+import {
+	get as _get,
+	isNil as _isNil,
+	kebabCase as _kebabCase,
+	map as _map,
+	upperFirst
+} from 'lodash';
 import {format, isValid, parseISO} from 'date-fns';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import React from 'react';
@@ -158,6 +164,15 @@ export function entityToOption(entity) {
 			entity.defaultAlias.name : '(unnamed)',
 		type: entity.type
 	};
+}
+
+/**
+ * Transforms an author credit to a string representation
+ * @param {object} authorCredit - An author credit
+ * @returns {string} A string representation of the credit
+ */
+export function authorCreditToString(authorCredit) {
+	return _map(authorCredit, (credit) => `${credit.name}${credit.joinPhrase}`).join('');
 }
 
 export function getEntityLabel(entity, returnHTML = true) {

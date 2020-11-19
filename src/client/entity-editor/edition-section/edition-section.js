@@ -434,7 +434,6 @@ function mapStateToProps(rootState: RootState): StateProps {
 	const matchingNameEditionGroups = state.get('matchingNameEditionGroups');
 
 	return {
-		authorCreditValue: state.get('authorCredit'),
 		authorValue: state.get('author'),
 		depthValue: state.get('depth'),
 		editionGroupRequired: state.get('editionGroupRequired'),

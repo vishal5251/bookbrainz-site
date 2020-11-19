@@ -25,7 +25,7 @@ import {
 	debouncedUpdatePages,
 	debouncedUpdateReleaseDate,
 	debouncedUpdateWeight,
-	debouncedUpdateWidth,
+	debouncedUpdateWidth, updateAuthorCredit,
 	updateEditionGroup,
 	updateFormat,
 	updatePublisher,
@@ -33,9 +33,10 @@ import {
 } from './actions';
 
 import type {List, Map} from 'immutable';
-import {entityToOption, transformISODateForSelect} from '../../helpers/entity';
+import {authorCreditToString, entityToOption, transformISODateForSelect} from '../../helpers/entity';
 
 import CustomInput from '../../input';
+import type {Dispatch} from 'redux';
 import Entity from '../common/entity';
 import LinkedEntity from '../common/linked-entity';
 import MergeField from '../common/merge-field';
@@ -61,6 +62,10 @@ type EditionGroup = {
 	id: number
 };
 
+type AuthorCredit = {
+	id: number
+};
+
 type OwnProps = {
 	mergingEntities: Array<object>
 };
@@ -73,6 +78,7 @@ type StateProps = {
 	pagesValue: ?number,
 	publisherValue: Map<string, any>,
 	editionGroupValue: Map<string, any>,
+	authorCreditValue: Map<string, any>,
 	releaseDateValue: ?object,
 	statusValue: ?number,
 	weightValue: ?number,
@@ -86,6 +92,7 @@ type DispatchProps = {
 	onPagesChange: (SyntheticInputEvent<>) => mixed,
 	onPublisherChange: (Publisher) => mixed,
 	onEditionGroupChange: (EditionGroup) => mixed,
+	onAuthorCreditChange: (AuthorCredit) => mixed,
 	onReleaseDateChange: (SyntheticInputEvent<>) => mixed,
 	onStatusChange: (?{value: number}) => mixed,
 	onWeightChange: (SyntheticInputEvent<>) => mixed,
@@ -140,12 +147,14 @@ function EditionSectionMerge({
 	onReleaseDateChange,
 	onPagesChange,
 	onEditionGroupChange,
+	onAuthorCreditChange,
 	onPublisherChange,
 	onStatusChange,
 	onWeightChange,
 	onWidthChange,
 	pagesValue,
 	editionGroupValue,
+	authorCreditValue,
 	publisherValue,
 	releaseDateValue,
 	statusValue,
@@ -153,6 +162,7 @@ function EditionSectionMerge({
 	widthValue
 }: Props) {
 	const editionGroupOptions = [];
+	const authorCreditOptions = [];
 	const releaseDateOptions = [];
 	const depthOptions = [];
 	const formatOptions = [];
@@ -162,6 +172,9 @@ function EditionSectionMerge({
 	const statusOptions = [];
 	const weightOptions = [];
 	const widthOptions = [];
+
+	// eslint-disable-next-line no-console
+	console.log('author credit value', authorCreditValue);
 
 	mergingEntities.forEach(entity => {
 		const depth = !_.isNil(entity.depth) && {label: entity.depth, value: entity.depth};
@@ -173,6 +186,34 @@ function EditionSectionMerge({
 		if (editionGroupOption && !_.find(editionGroupOptions, ['value.id', editionGroupOption.value.id])) {
 			editionGroupOptions.push(editionGroupOption);
 		}
+
+		const authorCreditOption = !_.isNil(entity.authorCredit) &&
+			{
+				label: authorCreditToString(entity.authorCredit.names),
+				value: entity.authorCredit.names
+			};
+
+		function compareCredits(option) {
+			if (option.value.length !== authorCreditOption.value.length) {
+				return false;
+			}
+
+			for (let i = 0; i < option.value.length; i++) {
+				const a = option.value[i];
+				const b = authorCreditOption.value[i];
+
+				if (a.authorBBID !== b.authorBBID || a.name !== b.name || a.joinPhrase !== b.joinPhrase) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		if (authorCreditOption && !_.find(authorCreditOptions, compareCredits)) {
+			authorCreditOptions.push(authorCreditOption);
+		}
+
 		const format = entity.editionFormat && {label: entity.editionFormat.label, value: entity.editionFormat.id};
 		if (format && !_.find(formatOptions, ['value', format.value])) {
 			formatOptions.push(format);
@@ -208,6 +249,10 @@ function EditionSectionMerge({
 			widthOptions.push(width);
 		}
 	});
+
+	// eslint-disable-next-line no-console
+	console.log('options', authorCreditOptions);
+
 	return (
 		<form>
 			<MergeField
@@ -217,6 +262,12 @@ function EditionSectionMerge({
 				options={editionGroupOptions}
 				valueRenderer={Entity}
 				onChange={onEditionGroupChange}
+			/>
+			<MergeField
+				currentValue={authorCreditValue}
+				label="Author Credit"
+				options={authorCreditOptions}
+				onChange={onAuthorCreditChange}
 			/>
 			<MergeField
 				currentValue={releaseDateValue}
@@ -293,6 +344,7 @@ function mapStateToProps(rootState: RootState): StateProps {
 	const state: Map<string, any> = rootState.get('editionSection');
 
 	return {
+		authorCreditValue: convertMapToObject(state.get('authorCreditEditor')),
 		depthValue: state.get('depth'),
 		editionGroupValue: convertMapToObject(state.get('editionGroup')),
 		formatValue: state.get('format'),
@@ -309,6 +361,7 @@ function mapStateToProps(rootState: RootState): StateProps {
 
 function mapDispatchToProps(dispatch: Dispatch<Action>): DispatchProps {
 	return {
+		onAuthorCreditChange: (value) => dispatch(updateAuthorCredit(value)),
 		onDepthChange: (event) => dispatch(debouncedUpdateDepth(
 			event.target.value ? parseInt(event.target.value, 10) : null
 		)),

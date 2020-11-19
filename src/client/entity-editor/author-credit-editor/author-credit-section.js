@@ -25,15 +25,15 @@ import {
 	showAuthorCreditEditor
 } from './actions';
 import {Button, Col, Row} from 'react-bootstrap';
-import {keys as _keys, map as _map} from 'lodash';
-
 import AuthorCreditEditor from './author-credit-editor';
 import CustomInput from '../../input';
-import type {Dispatch} from 'redux'; // eslint-disable-line import/named
+import type {Dispatch} from 'redux';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ValidationLabel from '../common/validation-label';
+import {keys as _keys} from 'lodash';
+import {authorCreditToString} from '../../helpers/entity';
 import {connect} from 'react-redux';
 import {convertMapToObject} from '../../helpers/utils';
 import {validateAuthorCreditSection} from '../validators/common';
@@ -66,7 +66,7 @@ function AuthorCreditSection({
 			/>
 		);
 	}
-	const authorCreditPreview = _map(authorCredit, (credit) => `${credit.name}${credit.joinPhrase}`).join('');
+	const authorCreditPreview = authorCreditToString(authorCredit);
 	const noAuthorCredit = _keys(authorCredit).length <= 0;
 	const isValid = validateAuthorCreditSection(authorCredit);
 

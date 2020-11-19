@@ -19,12 +19,12 @@
 // @flow
 
 import * as Immutable from 'immutable';
-import * as _ from 'lodash';
 
 import {
 	type Action,
 	SHOW_PHYSICAL,
 	TOGGLE_SHOW_EDITION_GROUP,
+	UPDATE_AUTHOR_CREDIT,
 	UPDATE_DEPTH,
 	UPDATE_EDITION_GROUP,
 	UPDATE_FORMAT,
@@ -68,6 +68,8 @@ function reducer(
 			return state.set('publisher', Immutable.fromJS(payload));
 		case UPDATE_EDITION_GROUP:
 			return state.set('editionGroup', Immutable.fromJS(payload));
+		case UPDATE_AUTHOR_CREDIT:
+			return state.set('authorCreditEditor', Immutable.fromJS(payload));
 		case UPDATE_RELEASE_DATE:
 			return state.set('releaseDate', payload);
 		case UPDATE_STATUS:

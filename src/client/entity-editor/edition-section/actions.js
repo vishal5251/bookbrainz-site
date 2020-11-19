@@ -34,6 +34,10 @@ type EditionGroup = {
 	id: number
 };
 
+type AuthorCredit = {
+	id: number
+};
+
 export type Action = {
 	payload?: mixed,
 	type: string,
@@ -42,6 +46,7 @@ export type Action = {
 
 
 export const UPDATE_EDITION_GROUP = 'UPDATE_EDITION_GROUP';
+export const UPDATE_AUTHOR_CREDIT = 'UPDATE_AUTHOR_CREDIT';
 export const UPDATE_PUBLISHER = 'UPDATE_PUBLISHER';
 export const UPDATE_RELEASE_DATE = 'UPDATE_RELEASE_DATE';
 export const UPDATE_FORMAT = 'UPDATE_FORMAT';
@@ -172,6 +177,20 @@ export function updateEditionGroup(newEditionGroup: EditionGroup | null): Action
 	return {
 		payload: newEditionGroup,
 		type: UPDATE_EDITION_GROUP
+	};
+}
+
+/**
+ * Produces an action completely replacing the author credit field.
+ *
+ * @param {AuthorCredit} newAuthorCredit - The new AuthorCredit object to be set
+ * 						 on the edition.
+ * @returns {Action} The resulting UPDATE_AUTHOR_CREDIT action.
+ */
+export function updateAuthorCredit(newAuthorCredit: AuthorCredit | null): Action {
+	return {
+		payload: newAuthorCredit,
+		type: UPDATE_AUTHOR_CREDIT
 	};
 }
 
