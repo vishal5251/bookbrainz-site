@@ -56,7 +56,7 @@ function DisambiguationField({
 	return (
 		<CustomInput
 			label={label}
-			tooltipText="If a different entity with the same name already exists or if there is a need for clarification"
+			tooltipText="Short text to help identify or differentiate entities"
 			type="text"
 			{...rest}
 		/>
