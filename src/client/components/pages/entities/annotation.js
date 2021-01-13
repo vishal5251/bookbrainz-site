@@ -44,7 +44,7 @@ class EntityAnnotation extends React.Component {
 		return (
 			<Row>
 				<Col md={12}>
-					<h2>Annotation</h2>
+					<h2>Note</h2>
 					<Collapse in={this.state.open}>
 						<p className="annotation-content">{annotation.content}</p>
 					</Collapse>

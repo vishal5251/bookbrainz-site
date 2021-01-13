@@ -43,7 +43,7 @@ function AnnotationSection({
 }) {
 	const annotationLabel = (
 		<span>
-			Annotation
+			Note
 			<span className="text-muted"> (optional)</span>
 		</span>
 	);
@@ -51,7 +51,7 @@ function AnnotationSection({
 	return (
 		<div>
 			<h2>
-				Annotation
+				Note
 			</h2>
 			<Row>
 				<Col md={6} mdOffset={3}>
@@ -68,7 +68,7 @@ function AnnotationSection({
 						<p className="small text-muted">Last modified: {formatDate(new Date(annotation.lastRevision.createdAt))}</p>
 					}
 					<p className="help-block">
-						Annotations allow you to enter freeform data that does not otherwise fit in the above form.
+						Notes allow you to enter freeform data that does not otherwise fit in the above form.
 						<b> Do not submit any copyrighted text here.</b> The contents will be made available to the public under <a href="https://musicbrainz.org/doc/About/Data_License">open licenses</a>.
 					</p>
 				</Col>

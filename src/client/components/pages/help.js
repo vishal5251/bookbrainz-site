@@ -136,7 +136,7 @@ function HelpPage() {
 					<ul>
 						<li>Minimal changes as in proofreading errors</li>
 						<li>Minimal changes on the cover</li>
-						<li>Reprints of the same Edition. You can mention “Reprint – [date]” in the annotations.</li>
+						<li>Reprints of the same Edition. You can mention “Reprint – [date]” in the notes.</li>
 						<li>When the edition uses the same ISBN (with rare exceptions)</li>
 					</ul>
 					<br/>
